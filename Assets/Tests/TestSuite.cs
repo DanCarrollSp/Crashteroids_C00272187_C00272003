@@ -109,4 +109,18 @@ public class TestSuite
 
         UnityEngine.Assertions.Assert.IsNull(asteroid);
     }
+
+    [UnityTest]
+    public IEnumerator ScoreResetsOnNewGame()
+    {
+        game.score = 1;
+        //2
+        game.isGameOver = true;
+        game.NewGame();
+
+        yield return new WaitForSeconds(0.1f);
+
+        //3
+        Assert.True(game.score == 0);
+    }
 }
