@@ -19,14 +19,24 @@ public class TestSuite
     // 1
     private Game game;
 
+    [SetUp]
+    public void Setup()
+    {
+        GameObject gameGameObject =
+            Object.Instantiate(Resources.Load<GameObject>("Prefabs/Game"));
+        game = gameGameObject.GetComponent<Game>();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        Object.Destroy(game.gameObject);
+    }
+
     // 2
     [UnityTest]
     public IEnumerator AsteroidsMoveDown()
     {
-        // 3
-        GameObject gameGameObject =
-            Object.Instantiate(Resources.Load<GameObject>("Prefabs/Game"));
-        game = gameGameObject.GetComponent<Game>();
         // 4
         GameObject asteroid = game.GetSpawner().SpawnAsteroid();
         // 5
@@ -36,6 +46,41 @@ public class TestSuite
         // 7
         Assert.Less(asteroid.transform.position.y, initialYPos);
         // 8
-        Object.Destroy(game.gameObject);
+    }
+
+    [UnityTest]
+    public IEnumerator GameOverOccursOnAsteroidCollision()
+    {
+        GameObject asteroid = game.GetSpawner().SpawnAsteroid();
+        //1
+        asteroid.transform.position = game.GetShip().transform.position;
+        //2
+        yield return new WaitForSeconds(0.1f);
+
+        //3
+        Assert.True(game.isGameOver);
+    }
+
+    //1
+    [Test]
+    public void NewGameRestartsGame()
+    {
+        //2
+        game.isGameOver = true;
+        game.NewGame();
+        //3
+        Assert.False(game.isGameOver);
+    }
+
+    [UnityTest]
+    public IEnumerator LaserMovesUp()
+    {
+        // 1
+        GameObject laser = game.GetShip().SpawnLaser();
+        // 2
+        float initialYPos = laser.transform.position.y;
+        yield return new WaitForSeconds(0.1f);
+        // 3
+        Assert.Greater(laser.transform.position.y, initialYPos);
     }
 }
