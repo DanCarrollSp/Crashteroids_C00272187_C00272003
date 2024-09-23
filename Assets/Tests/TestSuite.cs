@@ -97,4 +97,16 @@ public class TestSuite
         // 3
         Assert.Greater(laser.transform.position.y, initialYPos);
     }
+
+    [UnityTest]
+    public IEnumerator AsteroidDestroyedOffScreen()
+    {
+        GameObject asteroid = game.GetSpawner().SpawnAsteroid();
+
+        asteroid.transform.position = new Vector3(asteroid.transform.position.x, -10f, asteroid.transform.position.z);
+
+        yield return new WaitForSeconds(0.1f);
+
+        UnityEngine.Assertions.Assert.IsNull(asteroid);
+    }
 }
