@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -13,24 +14,20 @@ public class TestSuite
         // Use the Assert class to test conditions
     }
 
-
-
-
     // 1
     private Game game;
 
     [SetUp]
     public void Setup()
     {
-        GameObject gameGameObject =
-            Object.Instantiate(Resources.Load<GameObject>("Prefabs/Game"));
+        GameObject gameGameObject = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Game"));
         game = gameGameObject.GetComponent<Game>();
     }
 
     [TearDown]
     public void TearDown()
     {
-        Object.Destroy(game.gameObject);
+        UnityEngine.Object.Destroy(game.gameObject);
     }
 
     // 2
@@ -122,5 +119,45 @@ public class TestSuite
 
         //3
         Assert.True(game.score == 0);
+    }
+
+    [UnityTest]
+    public IEnumerator UpMovement()
+    {
+        //Create ship and get its start position
+        Ship ship = game.GetShip();
+        Vector2 startPos = game.GetShip().transform.position;
+
+        //Move the ship up
+        game.GetShip().MoveUp();
+
+        //Wait
+        yield return new WaitForSeconds(0.1f);
+
+        //Store new posisiton after moving up
+        Vector2 newPos = game.GetShip().transform.position;
+
+        //If new possition is greater than start position we succesfully moved up
+        Assert.True(startPos.y < newPos.y);
+    }
+
+    [UnityTest]
+    public IEnumerator DownMovement()
+    {
+        //Create ship and get its start position
+        Ship ship = game.GetShip();
+        Vector2 startPos = game.GetShip().transform.position;
+
+        //Move the ship Down
+        game.GetShip().MoveDown();
+
+        //Wait
+        yield return new WaitForSeconds(0.1f);
+
+        //Store new posisiton after moving down
+        Vector2 newPos = game.GetShip().transform.position;
+
+        //If new possition is less than start position we succesfully moved down
+        Assert.True(startPos.y > newPos.y);
     }
 }

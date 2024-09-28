@@ -114,6 +114,16 @@ public class Ship : MonoBehaviour
         }
     }
 
+    public void MoveUp()
+    {
+        //
+    }
+
+    public void MoveDown()
+    {
+        //
+    }
+
     public void Explode()
     {
         mesh.enabled = false;
