@@ -160,4 +160,60 @@ public class TestSuite
         //If new possition is less than start position we succesfully moved down
         Assert.True(startPos.y > newPos.y);
     }
+    //Test by Ruslan
+    [UnityTest]
+    public IEnumerator ShipStaysInBoundsWhenMovingUp()
+    {
+        float maxUp = -35;
+
+        Ship ship = game.GetShip();
+
+        ship.transform.position = new Vector3(0.0f, maxUp, 0.0f);
+
+        Vector2 startPos = ship.transform.position;
+
+        //Move the ship Down
+        game.GetShip().MoveUp();
+
+        //Wait
+        yield return new WaitForSeconds(0.5f);
+
+        //If new possition is less than start position we succesfully moved down
+        Assert.Greater(game.GetShip().transform.position.y, maxUp);
+    }
+    //Test by Ruslan
+    [UnityTest]
+    public IEnumerator ShipStaysInBoundsWhenMovingDown()
+    {
+        float maxDown = 3;
+
+        Ship ship = game.GetShip();
+
+        ship.transform.position = new Vector3(0.0f, maxDown, 0.0f);
+
+        Vector2 startPos = ship.transform.position;
+
+        //Move the ship Down
+        game.GetShip().MoveDown();
+
+        //Wait
+        yield return new WaitForSeconds(0.5f);
+
+        //If new possition is less than start position we succesfully moved down
+        Assert.Less(game.GetShip().transform.position.y, maxDown);
+    }
+
+    //Test by Ruslan
+    [UnityTest]
+    public IEnumerator ShipIsNotDestroyedWhenCollidingWithBullet()
+    {
+        // 1
+        Ship Ship = game.GetShip();
+        Ship.transform.position = Vector3.zero;
+        GameObject laser = game.GetShip().SpawnLaser();
+        laser.transform.position = Vector3.zero;
+        yield return new WaitForSeconds(0.1f);
+        // 2
+        UnityEngine.Assertions.Assert.IsNotNull(Ship);
+    }
 }
